@@ -1,0 +1,15 @@
+<br/>
+
+<%= form_for :email do |form| %>
+
+  <%= render(:partial => "field",
+             :collection => Email::HEADER_FIELDS +
+                            @email.class.fields +
+                            Email::FOOTER_FIELDS,
+             :locals => { :form => form }) %>
+
+  <%= hidden_field(:email, :class) %>
+
+  <%= form.submit "Send" %>
+
+<% end %>

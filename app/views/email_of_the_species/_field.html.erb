@@ -1,0 +1,13 @@
+<%= form.label field.name, "#{"* " if field.options[:required]}#{field.label}" %>
+
+<% if field.options[:type] != :check_box %><br/><% end %>
+
+<%= field.html_on(form) %>
+
+<br/>
+
+<% if field.supplement %>
+  <small><%= form.label(field.name, "(#{field.supplement})") %></small><br/>
+<% end %>
+
+<br/>
