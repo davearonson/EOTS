@@ -1,4 +1,4 @@
-class Field
+class EmailOfTheSpecies::Field
 
   attr_reader :name, :label, :options, :supplement
 
