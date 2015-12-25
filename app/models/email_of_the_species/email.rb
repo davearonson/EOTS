@@ -13,28 +13,47 @@ class EmailOfTheSpecies::Email
     self.class.fields.each do |f|
       section = f[:section] || :body
       parts[section] ||= []
-      parts[section] << "> #{"* " if f.options[:required]}#{f.label}"
+      parts[section] << "> #{"* " if f.html_options[:required]}#{f.label}"
       reply = self.public_send f.name
       parts[section] << (reply.present? ? reply : "(not answered)")
     end
     (parts[:body] + parts[:footer]).join("\n\n")
   end
 
+  def self.create_from_params(params)
+    type = params[:type]
+    errs = nil
+    email = nil
+    msg = "Invalid email type #{type}"
+    begin
+      klazz = "#{type.camelize}Email".constantize
+    rescue
+      errs ||= [msg]
+    end
+    if (klazz < EmailOfTheSpecies::Email)
+      email_params = params[:email] || {}
+      email = klazz.new(email_params)
+    else
+      errs ||= [msg]
+    end
+    [email, errs]
+  end
+
   # front-end requirements SHOULD make this redundant, BUT....
   # TODO MAYBE: check formatting?
-  def errors
-    errs = []
-    klazz.fields.each do |field|
-      next unless field.options[:required]
+  def missing_fields
+    missed = {}
+    self.class.fields.each do |field|
+      next unless field.html_options[:required]
       next if self.send(field.name).present?
       if field.custom_error_message
-        errs << field.custom_error_message
+        missed[field.name] = field.custom_error_message
       else
         need_an_n = %w(a e i o u).include? field.name.to_s.split("").first
-        errs <<  "You must supply a#{"n" if need_an_n} #{field.name}"
+        missed[field.name] = "You must supply a#{"n" if need_an_n} #{field.name}"
       end
     end
-    errs
+    missed
   end
 
   def self.field(name, label, options = {})
@@ -44,7 +63,7 @@ class EmailOfTheSpecies::Email
 
   def self.fields
     all_fields = EmailOfTheSpecies::FIELDS[self] || []
-    all_fields.unshift(superclass.fields) if(superclass.is_a?(EmailOfTheSpecies::Email))
+    all_fields.unshift(*superclass.fields) if superclass < EmailOfTheSpecies::Email
     all_fields
   end
 

@@ -3,7 +3,7 @@
 <%= form_for :email do |form| %>
 
   <%= render(:partial => "field",
-             :collection => @email.fields,  # TODO: SORT THEM!
+             :collection => @email.class.fields,  # TODO: SORT THEM!
              :locals => { :form => form }) %>
 
   <%= hidden_field(:email, :class) %>
