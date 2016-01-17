@@ -1,0 +1,17 @@
+<br/>
+
+<%= @kind.html_headers %>
+
+<%= form_tag(request.url) do %>
+
+  <%= render :partial => "field", :collection => @kind.header_fields %>
+  <%= render :partial => "field", :collection => @kind.body_fields %>
+  <%= render :partial => "field", :collection => @kind.footer_fields %>
+
+  <%= submit_tag "Send" %>
+
+<% end %>
+
+<br/>
+
+<%= @kind.html_footers %>

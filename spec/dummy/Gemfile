@@ -1,0 +1,9 @@
+source 'https://rubygems.org'
+
+gem 'rails'
+
+gem 'eots', path: '/Users/dave/computer/opensource/eots'
+
+group :test do
+  gem 'rspec-rails'
+end
