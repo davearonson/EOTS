@@ -1,5 +1,8 @@
 # EOTS
 
+[![Code Climate](https://codeclimate.com/github/davearonson/eots/badges/gpa.svg)](https://codeclimate.com/github/davearonson/eots)
+[![Build Status](https://travis-ci.org/davearonson/eots.png)](https://travis-ci.org/davearonson/eots)
+
 EOTS stands for Email Of The Species.  It is a mountable Rails engine that lets
 you define a hierarchy of kinds (species) of fillable forms to be emailed to
 you.  EOTS will take care of generating views, accepting posted
