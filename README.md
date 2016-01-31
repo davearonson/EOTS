@@ -172,6 +172,18 @@ since that email kind's definition overrode the `general` kind's `to` option.
 However, since the `bcc` was not overridden, `records@example.com` will still
 be bcc'ed.
 
+You can see some real-life examples linked to from
+[my contact page](http://www.codosaur.us/contact) --
+the config file to create them is [here](doc/eots_config.rb).
+(Please don't send me emails just to test it!)
+I've put the email destination in
+an environment variable called `EMAIL_DESTINATION`
+so that later I can open-source the whole site
+without revealing that,
+but you don't have to do that;
+you can just use a literal address there.
+
+
 ## Accepting the Filled-In Form
 
 Don't worry, EOTS has that covered.
@@ -238,6 +250,15 @@ whatever you use).
 
 Things I have in mind to do eventually:
 
+- Generate an index of forms, including descriptions specified in the config
+
 - Let you specify what layout a form should be shown on
 
 - Let you specify what URL to redirect to upon submitting a form
+
+- Let you specify a nil name for types you just want to subtype but never use
+  directly, and exempt that nil from name conflict checking
+
+- Meta: improve the test suite, add installation instructions and contribution guidelines, maybe a Code of Conduct
+
+- If _you've_ got other ideas (or find a bug), you can open an Issue or [contact me](http://www.codosaur.us/contact_emails/general)
