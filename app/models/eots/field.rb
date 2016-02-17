@@ -20,7 +20,8 @@ class EOTS::Field
   end
 
   def html(form)
-    result = form.label_tag(name, "#{"* " if html_options[:required]}#{label}")
+    star = "* " if html_options[:required]
+    result = form.label_tag(name, "#{star}#{label}".html_safe)
     type = html_options[:type]
     if type.to_sym == :checkbox  # to_sym 'cuz it could be string or symbol
       result << form.content_tag(:span, " ")  # just to provide a spacer
@@ -34,7 +35,7 @@ class EOTS::Field
     end
     if caption
       result << form.tag(:br) 
-      result << form.content_tag(:small, caption)
+      result << form.content_tag(:small, caption.html_safe)
     end
     result
   end
