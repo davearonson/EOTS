@@ -1,7 +1,7 @@
 PATH
   remote: /Users/dave/computer/opensource/eots
   specs:
-    eots (0.0.1)
+    eots (0.0.2)
       rails
 
 GEM
