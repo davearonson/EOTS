@@ -1,5 +1,7 @@
 class EOTS::Email  # an instance, as opposed to the whole kind
 
+  MissingRequiredFieldsError = Class.new(RuntimeError)
+
   attr_reader :kind, :values
 
   EOTS::STANDARD_FIELDS.each do |field|
@@ -21,14 +23,15 @@ class EOTS::Email  # an instance, as opposed to the whole kind
     # TEMPORARY KLUGE, UNTIL I MAKE THE VALUES A SUB-HASH:
     values = params.dup
     %w(action controller authenticity_token commit kind utf8).each { |k| values.delete k }
-    check_value_names(values, kind) if values
+    check_value_names(values, kind) if values.any?
+    check_required_fields(values, kind)
     self.new(kind, values)
   end
 
   def body
     parts = [kind.name.titleize]
     kind.form_fields.values.flatten.each do |field|
-      parts << "> #{"* " if field.html_options[:required]}#{field.label}"
+      parts << "> #{"* " if field.required?}#{field.label}"
       reply = values[field.name]
       parts << (reply.present? ? reply : "(not answered)")
     end
@@ -40,6 +43,16 @@ class EOTS::Email  # an instance, as opposed to the whole kind
   end
 
   private
+
+  def self.check_required_fields(values, kind)
+    required = kind.form_fields.values.flatten.select { |f| f.required? }.map(&:name)
+    given = values.keys
+    missing = required - given
+    if missing.any?
+      raise(MissingRequiredFieldsError,
+            "Missing required field(s) #{missing.sort.to_sentence}")
+    end
+  end
 
   def self.check_value_names(values, kind)
     field_names = kind.form_fields.values.flatten.map &:name

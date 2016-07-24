@@ -2,7 +2,9 @@ describe EOTS do
 
   before do
 
-    EOTS::email_type("top_level",
+    EOTS::reset
+
+    EOTS::email_kind("top_level",
                      header: "Thank you for contacting us.",
                      footer: "We will contact you back as soon as possible.") do
 
@@ -15,19 +17,20 @@ describe EOTS do
                   caption: "Make sure this is right or I won't be able to contact you!")
 
       EOTS::field("not_spambot", "I am not a spambot", type: :checkbox,
+                  required: true,
                   section: :footer)
 
-      EOTS::email_type("general") do
+      EOTS::email_kind("general") do
         EOTS::field("body", "What do you want to tell or ask us?",
                     type: :textarea, rows: 5, columns: 60, maxlength: 1024,
                     caption: "Maximum 1k of text")
       end
 
-      EOTS::email_type("non_general") do
+      EOTS::email_kind("non_general") do
 
         EOTS::field("body", "Anything else to tell or ask us?", type: :textarea)
 
-        EOTS::email_type("sales_inquiry",
+        EOTS::email_kind("sales_inquiry",
                          header: "We look forward to serving you!",
                          footer: "Thank you for your patronage!") do
 
@@ -42,15 +45,15 @@ describe EOTS do
 
         end
 
-        EOTS::email_type("customer service inquiry",
+        EOTS::email_kind("customer service inquiry",
                          header: "We're sorry you're not 100% satisfied.",
                          footer: "We'll do all we can to make things right.") do
 
-          EOTS::field("name", "What product are you having a problem with?",
+          EOTS::field("product", "What product are you having a problem with?",
                       columns: 60, maxlength: 60,
                       caption: "Please include the product number if you can")
 
-          EOTS::field("name", "What is the problem?",
+          EOTS::field("problem", "What is the problem?",
                       type: :textarea, rows: 5, columns: 60, maxlength: 1024,
                       caption: "Maximum 1k of text")
 
@@ -79,6 +82,21 @@ describe EOTS do
     it "shows captions correctly"
     it "enforces minimums on integers correctly"
     it "enforces maximums on integers correctly"
+  end
+
+  describe "#send_email" do
+    describe "checks requiredness of fields" do
+      it "barfs if any are missing" do
+        params = HashWithIndifferentAccess.new({ kind: "general" })
+        expect { EOTS::Email.create_from_params(params) }.
+          to raise_error(EOTS::Email::MissingRequiredFieldsError)
+      end
+      it "doesn't barfs if all are supplied" do
+        params = HashWithIndifferentAccess.new({ kind: "general",
+                                                 not_spambot: true })
+        expect { EOTS::Email.create_from_params(params) }.not_to raise_error
+      end
+    end
   end
 
 end
