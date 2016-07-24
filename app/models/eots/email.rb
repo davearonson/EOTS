@@ -23,11 +23,9 @@ class EOTS::Email  # an instance, as opposed to the whole kind
     # TEMPORARY KLUGE, UNTIL I MAKE THE VALUES A SUB-HASH:
     values = params.dup
     %w(action controller authenticity_token commit kind utf8).each { |k| values.delete k }
-    if values.any?
-      check_value_names(values, kind)
-      check_required_fields(values, kind)
-      self.new(kind, values)
-    end
+    check_value_names(values, kind) if values.any?
+    check_required_fields(values, kind)
+    self.new(kind, values)
   end
 
   def body
