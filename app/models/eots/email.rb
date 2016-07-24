@@ -46,9 +46,7 @@ class EOTS::Email  # an instance, as opposed to the whole kind
 
   def self.check_required_fields(values, kind)
     required = kind.form_fields.values.flatten.select { |f| f.required? }.map(&:name)
-    puts "required: #{ required.map { |n| "#{n} (#{n.class.name})" }.join(", ") }"
     given = values.keys
-    puts "given: #{ given.map { |n| "#{n} (#{n.class.name})" }.join(", ") }"
     missing = required - given
     if missing.any?
       raise(MissingRequiredFieldsError,
