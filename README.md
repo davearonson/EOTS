@@ -186,7 +186,18 @@ you can just use a literal address there.
 
 ## Accepting the Filled-In Form
 
-Don't worry, EOTS has that covered.
+Don't worry, EOTS has that covered.  There is a controller, and routes.rb
+entries.
+
+It even has some degree of spam protection.  It's up to you to describe your
+form, including what fields may be required (such as an "I am not a robot"
+checkbox).  Some spammers are using _your own_ forms to spam you, by using
+tools that bypass the fact that the HTML says certain fields are required.
+(That is, they will submit the form directly to the endpoint, not using any
+standard browser or other tool that will refuse to do so if a field marked
+"required" is not filled in.)  But now, as of version 0.0.3, EOTS will _check_
+the required fields on submission, so the spammers will have to make sure that
+any required fields are filled in, and any required checkbox checked.
 
 However, at this time it does _not_ set up your credentials and email processor
 and such.  You must still do that yourself, in the
