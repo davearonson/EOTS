@@ -20,7 +20,7 @@ class EOTS::Field
   end
 
   def html(form)
-    star = "* " if html_options[:required]
+    star = "* " if required?
     result = form.label_tag(name, "#{star}#{label}".html_safe)
     type = html_options[:type]
     if type.to_sym == :checkbox  # to_sym 'cuz it could be string or symbol
@@ -38,6 +38,10 @@ class EOTS::Field
       result << form.content_tag(:small, caption.html_safe)
     end
     result
+  end
+
+  def required?
+    html_options[:required]
   end
 
   private
