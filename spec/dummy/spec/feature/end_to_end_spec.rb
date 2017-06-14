@@ -20,6 +20,10 @@ describe EOTS do
                   required: true,
                   section: :footer)
 
+      EOTS::field("captcha", "CAPTCHA",
+                  must_match: "Captcha",
+                  section: :footer)
+
       EOTS::email_kind("general") do
         EOTS::field("body", "What do you want to tell or ask us?",
                     type: :textarea, rows: 5, columns: 60, maxlength: 1024,
@@ -87,12 +91,21 @@ describe EOTS do
   describe "#send_email" do
     describe "checks requiredness of fields" do
       it "barfs if any are missing" do
-        params = HashWithIndifferentAccess.new({ kind: "general" })
+        params = HashWithIndifferentAccess.new({ kind: "general",
+                                                 captcha: "Captcha" })
         expect { EOTS::Email.create_from_params(params) }.
           to raise_error(EOTS::Email::MissingRequiredFieldsError)
       end
-      it "doesn't barfs if all are supplied" do
+      it "barfs if any mismatch a required specific answer" do
         params = HashWithIndifferentAccess.new({ kind: "general",
+                                                 captcha: "something else",
+                                                 not_spambot: true })
+        expect { EOTS::Email.create_from_params(params) }.
+          to raise_error(EOTS::Email::MismatchedFieldError)
+      end
+      it "doesn't barfs if all are supplied and correct" do
+        params = HashWithIndifferentAccess.new({ kind: "general",
+                                                 captcha: "Captcha",
                                                  not_spambot: true })
         expect { EOTS::Email.create_from_params(params) }.not_to raise_error
       end

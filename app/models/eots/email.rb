@@ -1,6 +1,7 @@
 class EOTS::Email  # an instance, as opposed to the whole kind
 
   MissingRequiredFieldsError = Class.new(RuntimeError)
+  MismatchedFieldError = Class.new(RuntimeError)
 
   attr_reader :kind, :values
 
@@ -25,6 +26,7 @@ class EOTS::Email  # an instance, as opposed to the whole kind
     %w(action controller authenticity_token commit kind utf8).each { |k| values.delete k }
     check_value_names(values, kind) if values.any?
     check_required_fields(values, kind)
+    check_required_matches(values, kind)
     self.new(kind, values)
   end
 
@@ -51,6 +53,17 @@ class EOTS::Email  # an instance, as opposed to the whole kind
     if missing.any?
       raise(MissingRequiredFieldsError,
             "Missing required field(s) #{missing.sort.to_sentence}")
+    end
+  end
+
+  def self.check_required_matches(values, kind)
+    mismatches = kind.form_fields.values.flatten.select do |f|
+      (reqd = f.must_match) && values[f.name] != reqd
+    end
+    if mismatches.any?
+      list = mismatches.map { |f| "'#{f.name}'" }.join(", ")
+      raise(EOTS::Email::MismatchedFieldError,
+            "Incorrect answers on field(s) #{list}")
     end
   end
 

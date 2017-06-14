@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.name        = "eots"
   s.version     = EOTS::VERSION
   s.authors     = ["Dave Aronson"]
-  s.email       = ["github.2.trex@codosaur.us"]
+  s.email       = ["davearonson@users.noreply.github.com"]
   s.homepage    = "https://github.com/davearonson/eots"
   s.summary     = "Gem to declare multiples kinds of email -- Email of the Species"
   s.description = "Gem to programmatically declare multiples kinds of email and automagically construct forms, including view, routes, controller, etc."

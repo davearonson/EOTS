@@ -3,7 +3,7 @@ class EOTS::Field
   AlreadyDefinedError = Class.new(RuntimeError)
   InvalidSectionError = Class.new(RuntimeError)
 
-  attr_reader :name, :label, :caption, :section, :html_options
+  attr_reader :name, :label, :caption, :section, :html_options, :must_match
 
   def initialize(name, label, options={})
     @name = name.to_s
@@ -11,6 +11,7 @@ class EOTS::Field
     opts = options.dup
     @caption = opts.delete(:caption)
     @section = opts.delete(:section) || :body
+    @must_match = opts.delete(:must_match)
     unless [:header, :body, :footer].include? @section
       raise(InvalidSectionError,
             "Invalid section '#{@section}' -- must be :header, :body, or :footer")

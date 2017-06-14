@@ -1,7 +1,7 @@
 PATH
   remote: /Users/dave/computer/opensource/eots
   specs:
-    eots (0.0.3)
+    eots (0.0.4)
       rails
 
 GEM
@@ -126,4 +126,4 @@ DEPENDENCIES
   rspec-rails
 
 BUNDLED WITH
-   1.11.2
+   1.13.7
